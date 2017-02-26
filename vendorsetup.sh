@@ -1,3 +1,3 @@
-add_lunch_combo android_dre-user
 add_lunch_combo android_dre-eng
+add_lunch_combo android_dre-user
 add_lunch_combo android_dre-userdebug
