@@ -96,6 +96,45 @@ kernel: $(PRODUCT_OUT)/kernel
 #############################################################################
 # 				Build bootloader			    #
 #############################################################################
+.PHONY: bootloader
+BOOTLOADER_DEVICE_NAME ?= android_dre
+TARGET_BOOTLOADER_SRC ?= bootable/bootloader/ubootfsl
+TARGET_BOOTLOADER_ARCH := arm
+TARGET_BOOTLOADER_CONFIG ?= mx6qsabresdandroid_defconfig
+BOOTLOADER_CONFIG_DIR := device/nxp/imx6q/android_dre
+BOOTLOADER_NAME := u-boot.imx
+BOOTLOADER_OUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/uboot)
+BOOTLOADER_BIN := $(BOOTLOADER_OUT)/$(BOOTLOADER_NAME)
+BOOTLOADER_CROSS_COMPILE_TOOLCHAIN := `pwd`/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-
+
+build_bootloader := +$(MAKE) -C $(TARGET_BOOTLOADER_SRC) \
+		O=$(BOOTLOADER_OUT) \
+                ARCH=$(TARGET_BOOTLOADER_ARCH) \
+                CROSS_COMPILE=$(BOOTLOADER_CROSS_COMPILE_TOOLCHAIN) \
+                LD=$(BOOTLOADER_CROSS_COMPILE_TOOLCHAIN)ld.bfd \
+		$(if $(SHOW_COMMANDS),V=1)
+
+BOOTLOADER_CONFIG_FILE := device/nxp/imx6q/android_dre/$(TARGET_BOOTLOADER_CONFIG)
+
+BOOTLOADER_CONFIG := $(BOOTLOADER_OUT)/.config
+$(BOOTLOADER_CONFIG): $(BOOTLOADER_CONFIG_FILE)
+	$(hide) mkdir -p $(@D) && cat $(wildcard $^) > $@
+	$(build_bootloader) oldnoconfig
+
+.PHONY: $(PRODUCT_OUT)/u-boot_$(BOOTLOADER_DEVICE_NAME).imx
+bootloader: $(PRODUCT_OUT)/u-boot_$(BOOTLOADER_DEVICE_NAME).imx
+$(PRODUCT_OUT)/u-boot_$(BOOTLOADER_DEVICE_NAME).imx: $(BOOTLOADER_CONFIG) | $(ACP)
+	$(build_bootloader)
+	$(hide) $(ACP) -fp $(BOOTLOADER_BIN) $@
+
+############################################################################
+
+############################################################################
+
+############################################################################
+               
+             
+           
 
 
 
