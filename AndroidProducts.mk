@@ -27,4 +27,4 @@
 # Copied from build/target/product/AndroidProducts.mk
 
 PRODUCT_MAKEFILES := \
-  $(LOCAL_DIR)/android_dre.mk
+  $(LOCAL_DIR)/androiddre.mk

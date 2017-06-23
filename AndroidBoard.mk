@@ -5,11 +5,11 @@ ifneq ($(TARGET_PREBUILT_KERNEL),)
 $(error TARGET_PREBUILT_KERNEL defined but AndroidIA kernels build from source)
 endif
 
-TARGET_KERNEL_SRC ?= kernel/androiddre
+TARGET_KERNEL_SRC ?= kernel/androi_dre
 TARGET_KERNEL_ARCH := arm
 TARGET_KERNEL_CONFIG ?= kernel_android_dre_defconfig
 ADDITIONAL_DEFAULT_PROPERTIES += ro.boot.moduleslocation=/vendor/lib/modules
-KERNEL_CONFIG_DIR := device/nxp/imx6q/android_dre
+KERNEL_CONFIG_DIR := device/nxp/6q/androiddre
 KERNEL_NAME := zImage
 KERNEL_LOADADDR := 0x10008000
 # Set the output for the kernel build products.
@@ -48,7 +48,7 @@ build_dt := +$(MAKE) -C $(TARGET_KERNEL_SRC) \
 		KAFLAGS="$(KERNEL_AFLAGS)" \
 		$(if $(SHOW_COMMANDS),V=1)
 
-KERNEL_CONFIG_FILE := device/nxp/imx6q/android_dre/$(TARGET_KERNEL_CONFIG)
+KERNEL_CONFIG_FILE := device/nxp/6q/androiddre/$(TARGET_KERNEL_CONFIG)
 
 KERNEL_CONFIG := $(KERNEL_OUT)/.config
 $(KERNEL_CONFIG): $(KERNEL_CONFIG_FILE)
@@ -95,11 +95,11 @@ kernel: $(PRODUCT_OUT)/kernel
 # 				Build bootloader			    #
 #############################################################################
 .PHONY: bootloader
-BOOTLOADER_DEVICE_NAME ?= android_dre
-TARGET_BOOTLOADER_SRC ?= bootable/bootloader/ubootfsl
+BOOTLOADER_DEVICE_NAME ?= androiddre
+TARGET_BOOTLOADER_SRC ?= bootable/bootloader/uboot201701
 TARGET_BOOTLOADER_ARCH := arm
 TARGET_BOOTLOADER_CONFIG ?= uboot_android_dre_defconfig
-BOOTLOADER_CONFIG_DIR := device/nxp/imx6q/android_dre
+BOOTLOADER_CONFIG_DIR := device/nxp/6q/androiddre
 BOOTLOADER_NAME := u-boot.imx
 BOOTLOADER_OUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/uboot)
 BOOTLOADER_BIN := $(BOOTLOADER_OUT)/$(BOOTLOADER_NAME)
@@ -112,7 +112,7 @@ build_bootloader := +$(MAKE) -C $(TARGET_BOOTLOADER_SRC) \
                 LD=$(BOOTLOADER_CROSS_COMPILE_TOOLCHAIN)ld.bfd \
 		$(if $(SHOW_COMMANDS),V=1)
 
-BOOTLOADER_CONFIG_FILE := device/nxp/imx6q/android_dre/$(TARGET_BOOTLOADER_CONFIG)
+BOOTLOADER_CONFIG_FILE := device/nxp/6q/androiddre/$(TARGET_BOOTLOADER_CONFIG)
 
 BOOTLOADER_CONFIG := $(BOOTLOADER_OUT)/.config
 $(BOOTLOADER_CONFIG): $(BOOTLOADER_CONFIG_FILE)
