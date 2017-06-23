@@ -6,15 +6,12 @@ $(error TARGET_PREBUILT_KERNEL defined but AndroidIA kernels build from source)
 endif
 
 TARGET_KERNEL_SRC ?= kernel/androiddre
-
 TARGET_KERNEL_ARCH := arm
-TARGET_KERNEL_CONFIG ?= imx6_defconfig
+TARGET_KERNEL_CONFIG ?= kernel_android_dre_defconfig
 ADDITIONAL_DEFAULT_PROPERTIES += ro.boot.moduleslocation=/vendor/lib/modules
-
 KERNEL_CONFIG_DIR := device/nxp/imx6q/android_dre
-
 KERNEL_NAME := zImage
-
+KERNEL_LOADADDR := 0x10008000
 # Set the output for the kernel build products.
 KERNEL_OUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/kernel)
 KERNEL_BIN := $(KERNEL_OUT)/arch/$(TARGET_KERNEL_ARCH)/boot/$(KERNEL_NAME)
@@ -39,7 +36,8 @@ build_kernel := +$(MAKE) -C $(TARGET_KERNEL_SRC) \
 		KCFLAGS="$(KERNEL_CFLAGS)" \
 		KAFLAGS="$(KERNEL_AFLAGS)" \
 		$(if $(SHOW_COMMANDS),V=1) \
-		INSTALL_MOD_PATH=$(abspath $(TARGET_OUT))
+		INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) \
+		LOADADDR = $(KERNEL_LOADADDR)
 
 build_dt := +$(MAKE) -C $(TARGET_KERNEL_SRC) \
 		O=$(KERNEL_OUT) \
@@ -100,7 +98,7 @@ kernel: $(PRODUCT_OUT)/kernel
 BOOTLOADER_DEVICE_NAME ?= android_dre
 TARGET_BOOTLOADER_SRC ?= bootable/bootloader/ubootfsl
 TARGET_BOOTLOADER_ARCH := arm
-TARGET_BOOTLOADER_CONFIG ?= mx6qsabresdandroid_defconfig
+TARGET_BOOTLOADER_CONFIG ?= uboot_android_dre_defconfig
 BOOTLOADER_CONFIG_DIR := device/nxp/imx6q/android_dre
 BOOTLOADER_NAME := u-boot.imx
 BOOTLOADER_OUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/uboot)
