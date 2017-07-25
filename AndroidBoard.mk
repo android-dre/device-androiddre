@@ -5,7 +5,7 @@ ifneq ($(TARGET_PREBUILT_KERNEL),)
 $(error TARGET_PREBUILT_KERNEL defined but AndroidIA kernels build from source)
 endif
 
-TARGET_KERNEL_SRC ?= kernel/androi_dre
+TARGET_KERNEL_SRC ?= kernel/android_dre
 TARGET_KERNEL_ARCH := arm
 TARGET_KERNEL_CONFIG ?= kernel_android_dre_defconfig
 ADDITIONAL_DEFAULT_PROPERTIES += ro.boot.moduleslocation=/vendor/lib/modules
@@ -17,7 +17,7 @@ KERNEL_OUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/kernel)
 KERNEL_BIN := $(KERNEL_OUT)/arch/$(TARGET_KERNEL_ARCH)/boot/$(KERNEL_NAME)
 KERNEL_MODULES_INSTALL := $(TARGET_OUT)/lib/modules
 
-KERNELRELEASE = $(shell cat $(KERNEL_OUT)/include/config/kernel.release)
+KERNELRELEASE=$(shell cat $(KERNEL_OUT)/include/config/kernel.release)
 
 KERNEL_CROSS_TOOLCHAIN := `pwd`/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-
 KERNEL_CFLAGS := -mno-android
@@ -28,7 +28,7 @@ DT_NAME := imx6q-androiddre.dtb
 DT_BIN := $(KERNEL_OUT)/arch/$(TARGET_KERNEL_ARCH)/boot/dts/$(DT_NAME)
 
 
-build_kernel := +$(MAKE) -C $(TARGET_KERNEL_SRC) \
+build_kernel := $(MAKE) -C $(TARGET_KERNEL_SRC) \
 		O=$(KERNEL_OUT) \
 		ARCH=$(TARGET_KERNEL_ARCH) \
 		CROSS_COMPILE="$(KERNEL_CROSS_TOOLCHAIN)" \
@@ -37,9 +37,9 @@ build_kernel := +$(MAKE) -C $(TARGET_KERNEL_SRC) \
 		KAFLAGS="$(KERNEL_AFLAGS)" \
 		$(if $(SHOW_COMMANDS),V=1) \
 		INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) \
-		LOADADDR = $(KERNEL_LOADADDR)
+		LOADADDR=$(KERNEL_LOADADDR)
 
-build_dt := +$(MAKE) -C $(TARGET_KERNEL_SRC) \
+build_dt := $(MAKE) -C $(TARGET_KERNEL_SRC) \
 		O=$(KERNEL_OUT) \
 		ARCH=$(TARGET_KERNEL_ARCH) \
 		CROSS_COMPILE=$(KERNEL_CROSS_TOOLCHAIN) \
@@ -105,7 +105,7 @@ BOOTLOADER_OUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/uboot)
 BOOTLOADER_BIN := $(BOOTLOADER_OUT)/$(BOOTLOADER_NAME)
 BOOTLOADER_CROSS_COMPILE_TOOLCHAIN := `pwd`/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-
 
-build_bootloader := +$(MAKE) -C $(TARGET_BOOTLOADER_SRC) \
+build_bootloader := $(MAKE) -C $(TARGET_BOOTLOADER_SRC) \
 		O=$(BOOTLOADER_OUT) \
                 ARCH=$(TARGET_BOOTLOADER_ARCH) \
                 CROSS_COMPILE=$(BOOTLOADER_CROSS_COMPILE_TOOLCHAIN) \
