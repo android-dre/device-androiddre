@@ -24,9 +24,8 @@ KERNEL_CFLAGS := -mno-android
 #KERNEL_ENV := ARCH=arm CROSS_COMPILE=$(KERNEL_CROSS_TOOLCHAIN) LOADADDR=$(LOAD_KERNEL_ENTRY) $(KERNEL_CFLAGS)
 
 # Build for Device tree
-#DT_NAME := imx6q-androiddre.dtb
-#DT_BIN := $(KERNEL_OUT)/arch/$(TARGET_KERNEL_ARCH)/boot/dts/$(DT_NAME)
-
+KERNEL_DT_NAME := imx6q-androiddre.dtb
+KERNEL_DT_BIN := $(KERNEL_OUT)/arch/$(TARGET_KERNEL_ARCH)/boot/dts/$(KERNEL_DT_NAME)
 
 build_kernel := $(MAKE) -C $(TARGET_KERNEL_SRC) \
 		O=$(KERNEL_OUT) \
@@ -39,7 +38,7 @@ build_kernel := $(MAKE) -C $(TARGET_KERNEL_SRC) \
 		INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) \
 		LOADADDR=$(KERNEL_LOADADDR)
 
-#build_dt := $(MAKE) -C $(TARGET_KERNEL_SRC) \
+build_dt := $(MAKE) -C $(TARGET_KERNEL_SRC) \
 		O=$(KERNEL_OUT) \
 		ARCH=$(TARGET_KERNEL_ARCH) \
 		CROSS_COMPILE=$(KERNEL_CROSS_TOOLCHAIN) \
@@ -59,8 +58,8 @@ $(KERNEL_CONFIG): $(KERNEL_CONFIG_FILE)
 $(PRODUCT_OUT)/kernel: $(KERNEL_CONFIG) | $(ACP)
 	$(build_kernel) $(KERNEL_NAME) modules
 	$(hide) $(ACP) -fp $(KERNEL_BIN) $@
-#	$(build_dt) $(DT_NAME)
-#	$(hide) install -D $(DT_BIN) $(PRODUCT_OUT)/$(DT_NAME)
+	$(build_dt) $(KERNEL_DT_NAME)
+	$(hide) install -D $(KERNEL_DT_BIN) $(PRODUCT_OUT)/$(KERNEL_DT_NAME)
 
 ALL_EXTRA_MODULES := $(patsubst %,$(TARGET_OUT_INTERMEDIATES)/kmodule/%,$(TARGET_EXTRA_KERNEL_MODULES))
 $(ALL_EXTRA_MODULES): $(TARGET_OUT_INTERMEDIATES)/kmodule/%: $(PRODUCT_OUT)/kernel
@@ -124,6 +123,12 @@ bootloader: $(PRODUCT_OUT)/u-boot_$(BOOTLOADER_DEVICE_NAME).imx
 $(PRODUCT_OUT)/u-boot_$(BOOTLOADER_DEVICE_NAME).imx: $(BOOTLOADER_CONFIG) | $(ACP)
 	$(build_bootloader)
 	$(hide) $(ACP) -fp $(BOOTLOADER_BIN) $@
+
+############################################################################
+
+############################################################################
+
+############################################################################
 
 ############################################################################
 
